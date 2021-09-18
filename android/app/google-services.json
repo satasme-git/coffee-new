@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "787248879185",
+    "project_id": "coffee-app-fb513",
+    "storage_bucket": "coffee-app-fb513.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787248879185:android:d06f712b2d947ecfee0a70",
+        "android_client_info": {
+          "package_name": "com.satasme.coffeeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "787248879185-uavdc1kb1vslrugmi3u5m5dphk460p83.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4x8QOYV89X-j6Zc77MNj5SihoMwmO0wA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "787248879185-uavdc1kb1vslrugmi3u5m5dphk460p83.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
