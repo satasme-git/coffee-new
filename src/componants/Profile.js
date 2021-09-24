@@ -21,7 +21,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import RNFetchBlob from 'rn-fetch-blob';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ImagePicker from 'react-native-image-picker';
+// import * as ImagePicker from "react-native-image-picker"
 import Context from '../../Context/context';
 import {Validation} from '../components/Validation';
 

@@ -33,6 +33,7 @@ export * from './BoxOrders';
 export * from './ForgotPw';
 export * from './ForgotPwScreen';
 export * from './TermsAndConditions';
+export * from './Week';
 
 // export * from '../../Context/GlobalState';
 

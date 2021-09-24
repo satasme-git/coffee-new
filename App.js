@@ -58,6 +58,7 @@ import {
   ForgotPw,
   ForgotPwScreen,
   TermsAndConditions,
+  Week
 } from './src/componants';
 
 import {CartComponant} from './src';
@@ -154,7 +155,7 @@ const DrawerStackScreen = ({navigation}) => (
     <Drawer.Screen name="HomeAppliance" component={HomeAppliance} />
     <Drawer.Screen name="TermsAndConditions" component={TermsAndConditions} />
 
-    {/* <Drawer.Screen name="TabNavigator" component={TabNavigator} /> */}
+    <Drawer.Screen name="Week" component={Week} />
   </Drawer.Navigator>
 );
 

@@ -46,6 +46,7 @@ export class TestScreen extends Component {
     this.state = {
       scroll: new Animated.Value(0),
       isLoading: true,
+      isLoading2: false,
       dataSource: '',
       _id: '',
       _name: '',
@@ -154,9 +155,10 @@ export class TestScreen extends Component {
       } else {
         const source = { uri: response.uri };
         const imdata = response.data;
-
+        console.log(source)
         this.setState({
           isLoading: false,
+          // isLoading2: true,
           imageSource: source,
           abc: '',
           dataa: imdata,
@@ -168,6 +170,10 @@ export class TestScreen extends Component {
     });
   }
   async uploadPhoto() {
+    this.setState(
+      {
+        isLoading2: true,
+      })
     var aaaa = this.state.dataa;
     const myArray = await AsyncStorage.getItem('cus_id');
 
@@ -188,14 +194,18 @@ export class TestScreen extends Component {
 
       .then((response) => response.json())
       .then((responseJson) => {
+        // this.context.setState({loading:true})
+        this.context.addNewTask(responseJson);
         this.setState(
           {
             isLoading: false,
+            isLoading2: false,
             isVisible: true,
           }
         );
+        
 
-        this.context.addNewTask(responseJson);
+        
 
         const jsonValue = JSON.stringify(responseJson);
         AsyncStorage.setItem('userInfo', jsonValue);
@@ -315,6 +325,7 @@ export class TestScreen extends Component {
     }
   }
   async editPhone() {
+    
     const { TextInputName, TextInputPhone } = this.state;
     const id = await AsyncStorage.getItem('cus_id');
     if (TextInputPhone == '') {
@@ -360,7 +371,10 @@ export class TestScreen extends Component {
 
 
           this.context.addNewTask(responseJson);
-
+          // this.setState(
+          //   {
+          //     isLoading2: false,
+          //   })
           const jsonValue = JSON.stringify(responseJson);
           AsyncStorage.setItem('userInfo', jsonValue);
 
@@ -381,13 +395,32 @@ export class TestScreen extends Component {
 
       extrapolate: 'clamp',
     });
-    const { isVisible, isVisible2, isVisible3, isVisible4 } = this.state;
+    const { isVisible, isVisible2, isVisible3, isVisible4 ,isLoading2,imageSource} = this.state;
     return (
       <View style={styles.foreground}>
 
         <Animated.View style={{ opacity: titleOpacity }}>
           <View >
-            <Avatar
+          <TouchableOpacity style={styles.avatarButton}  onPress={() => this.selectPhoto()}>
+            <View>
+            {this.context.name.image != ''?
+              isLoading2==true?
+            <Image source={imageSource} style={styles.avatar}  />
+            :
+            <Image source={{uri:'https://boxesfree.shop/images/Customer/' + this.context.name.image}} style={styles.avatar}  />
+            
+            :
+            imageSource !== null ?
+            <Image source={imageSource} style={styles.avatar}  />
+            :
+            
+            <Image source={require('../images/profiled.png')} style={styles.avatar} />
+            
+            }
+            <Image source={imageSource} style={[styles.avatar,{position:'absolute',zIndex:-1}]}  />
+            </View>
+            </TouchableOpacity>
+            {/* <Avatar
               rounded
               showEditButton
 
@@ -424,7 +457,7 @@ export class TestScreen extends Component {
               }}
               onPress={() => this.selectPhoto()}
 
-            />
+            /> */}
           </View>
 
 
@@ -1113,5 +1146,20 @@ const styles = StyleSheet.create({
   backgroundRadious: {
     borderBottomLeftRadius: 35,
     borderBottomRightRadius: 35
+  },
+  avatar:{
+    width:95,
+    height:95,
+    borderRadius:100
+  },
+  avatarButton:{
+    height:100,
+    width:100,
+    backgroundColor:'gray',
+    borderRadius:100,
+    borderWidth:5,
+    borderColor:'white',
+    alignItems:'center',
+    justifyContent:'center'
   }
 });

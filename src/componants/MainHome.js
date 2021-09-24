@@ -45,6 +45,9 @@ import Carousel from 'react-native-snap-carousel';
 import Dialog from 'react-native-dialog';
 import { MaterialDialog } from 'react-native-material-dialog';
 import AsyncStorage from '@react-native-community/async-storage';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Modal from 'react-native-modal';
+
 let deviceWidth = Dimensions.get('window').width;
 
 
@@ -66,6 +69,9 @@ export class MainHome extends Component {
       setVisible: '',
       isModalVisible: false,
       setModalVisible: false,
+      isVisible:false,
+      openData :{},
+      closeData:[]
     };
 
     this.loadDbVarable = this.loadDbVarable.bind(this);
@@ -79,9 +85,65 @@ export class MainHome extends Component {
   };
 
   toggleModal() {
+    // let {setModalVisible}= this.state;
     this.setState({
       setModalVisible: true,
     });
+  }  
+  
+  toggleModal2() {
+    let {isVisible}= this.state;
+    this.setState({
+      isVisible: !isVisible,
+    });
+  }
+  fetchClose(){
+    fetch('https://boxesfree.shop/api/getweek', {
+      method: 'get',
+      header: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          closeData: responseJson,
+        });
+        console.log(responseJson)
+      })
+      .catch((error) => {
+        // console.error(error);
+        // this.setState({
+        //   visible: true,
+        //   errormsg: 1,
+        // });
+      });
+  }
+
+  fetchOpen(){
+    fetch('https://boxesfree.shop/api/getopendetails', {
+      method: 'get',
+      header: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          openData: responseJson,
+        });
+        this.toggleModal2();
+        console.log(responseJson)
+      })
+      .catch((error) => {
+        // console.error(error);
+        // this.setState({
+        //   visible: true,
+        //   errormsg: 1,
+        // });
+      });
   }
   _renderItem = ({ item, index }) => {
     return (
@@ -167,9 +229,11 @@ export class MainHome extends Component {
       });
   }
   async componentDidMount() {
+    this.fetchOpen();
+    this.fetchClose();
     this.getAllSlides();
     this.loadScren();
-
+    
 
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     this.setState({
@@ -309,7 +373,7 @@ export class MainHome extends Component {
   keyExtractor = (item, index) => index.toString();
 
   render() {
-    let { isLoading } = this.state;
+    let { isLoading,isVisible } = this.state;
     const { search } = this.state;
     const starStyle = {
       width: 70,
@@ -409,7 +473,7 @@ export class MainHome extends Component {
                         fontSize: 32,
                         color: 'white',
                       }}>
-                      Welcome To
+                      Welcome To 
                     </Text>
                     <Text
                       style={{
@@ -779,6 +843,157 @@ export class MainHome extends Component {
             </Dialog.Container> */}
             </View>
           </ParallaxScroll>
+          <Modal
+          isVisible={isVisible}
+          // isVisible={true}
+          backdropOpacity={0.5}
+          animationIn={'bounceIn'}>
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginBottom: -30,
+                zIndex: 1,
+              }}>
+              <View
+                style={{
+                  backgroundColor: this.state.openData.status==0?'#ea3f37':'green',
+                  height: 40,
+                  width: deviceWidth - 100,
+                  borderTopLeftRadius: 5,
+                  alignItems: 'center',
+                  padding: 10,
+                  flexDirection: 'row',
+                }}>
+                {/* <MaterialIcons
+                  name="mode-edit"
+                  size={25}
+                  color={'white'}
+                  style={{ alignSelf: 'center', paddingRight: 10 }}
+                /> */}
+
+                <Text style={{ color: 'white' }}>{this.state.openData.status==0?"Closed":"Open Now"}</Text>
+              </View>
+              <View
+                style={{
+                  width: 0,
+                  height: 0,
+                  backgroundColor: 'transparent',
+                  borderStyle: 'solid',
+                  borderRightWidth: 20,
+                  borderTopWidth: 40,
+                  borderRightColor: 'transparent',
+                  borderTopColor: this.state.openData.status==0?'#ea3f37':'green',
+                }}
+              />
+              <View
+                style={{
+                  width: 0,
+                  height: 0,
+                  backgroundColor: 'transparent',
+                  borderStyle: 'solid',
+                  borderLeftWidth: 5,
+                  borderRightWidth: 5,
+                  borderBottomWidth: 10,
+                  borderLeftColor: 'transparent',
+                  borderRightColor: 'transparent',
+                  borderBottomColor:this.state.openData.status==0?'#8e0b0b':'#104c2e',
+                  marginLeft: -5,
+                }}
+              />
+            </View>
+
+            <View
+              style={{
+                backgroundColor: 'white',
+                padding: 15,
+                paddingTop: 40,
+                borderRadius: 5,
+              }}>
+                {this.state.openData.status==0?
+
+                <Text style={{fontSize:20,padding:5,color:'#ea3f37'}}>We Closed Today</Text>
+
+                :
+                <View style={{flexDirection:'row'}}>
+              <View style={{padding:5}}>
+                <Text>Open</Text>
+                <Text style={{fontSize:20}}>{this.state.openData.open}</Text>
+              </View>
+              <View style={{padding:5}}>
+                <Text>Close</Text>
+                <Text style={{fontSize:20}}>{this.state.openData.close}</Text>
+              </View>
+              </View>
+              }
+              <View style={{height:1,width:'100%',backgroundColor:'gray'}} />
+              <View style={{paddingVertical:5}}>
+              <Text style={{padding:5}}>This Week</Text>
+              <View style={{flexDirection:'row',flexWrap:'wrap',width:'100%'}}>
+              {
+                this.state.closeData.map((close)=>
+                  <View key={close.id} style={{flexDirection:'row',flexWrap:'wrap',width:'14.25%',alignItems:'center',justifyContent:'center'}}>
+                    
+                    {close.status==1?
+                    <View style={{width:'98%',alignItems:'center',paddingVertical:2}}>
+                    <Text style={{fontSize:14}}>{close.day.slice(0, 3).toUpperCase()}</Text>
+                    <Text style={{fontSize:8}}>{close.date}</Text>
+                    </View>
+                    :
+                    <View style={{width:'98%',alignItems:'center',backgroundColor:'#E3685E',paddingVertical:2}}>
+                    <Text style={{fontSize:14,color:'white'}}>{close.day.slice(0, 3).toUpperCase()}</Text>
+                    <Text style={{fontSize:8,color:'white'}}>{close.date}</Text>
+                    </View>
+                    }
+                    {close.status==1?null:
+                    <Text style={{fontSize:12,color:'#E3685E'}}>Closed</Text>
+                    }
+                  </View>
+                )
+              }
+            </View>
+            </View>
+
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <Button
+                  title="View Week"
+                  titleStyle={{ color: 'black', fontSize: 17 }}
+                  buttonStyle={{
+                    alignSelf: 'flex-end',
+                    marginTop: 10,
+                    paddingVertical: 5,
+                    borderColor:this.state.openData.status==0?'#ea3f37':'green',
+                    paddingHorizontal: 20,
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderRadius: 10,
+                    marginRight: 10,
+                  }}
+                  onPress={() =>{this.props.navigation.navigate('Week');this.toggleModal2()}}
+                />
+                <Button
+                  title="Close"
+                  titleStyle={{ color: 'black', fontSize: 17 }}
+                  buttonStyle={{
+                    alignSelf: 'flex-end',
+                    marginTop: 10,
+                    paddingVertical: 5,
+                    borderColor: this.state.openData.status==0?'#ea3f37':'green',
+                    paddingHorizontal: 20,
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderRadius: 10,
+                  }}
+                  onPress={() => {this.toggleModal2() }}
+                />
+              </View>
+              </View>
+
+            </View>
+        </Modal>
+
+
         </Animatable.View>
       );
     }

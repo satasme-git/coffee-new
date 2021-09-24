@@ -12,6 +12,8 @@ target 'coffeeApp' do
   pod 'rn-fetch-blob',
     :path => '../node_modules/rn-fetch-blob'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'coffeeAppTests' do
     inherit! :complete
     # Pods for testing

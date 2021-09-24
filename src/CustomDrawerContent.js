@@ -661,6 +661,42 @@ export class CustomDrawerContent extends Component {
             <TouchableOpacity
               style={[{ paddingLeft: 10, paddingRight: 10, paddingTop: 2 }]}
               activeOpacity={0.5}
+              onPress={() => { this.props.navigation.navigate('Week');}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  padding: 5,
+                  backgroundColor: '457',
+                  marginLeft: 15,
+                }}>
+                <Icon
+                  name="ios-calendar-outline"
+                  iconStyle={{
+                    fontSize: 25,
+                    fontWeight: 'normal',
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    paddingTop: 3,
+                  }}
+                  size={23}
+                  color="black"
+                />
+                <View style={styles.SeparatorLine} />
+                <Text
+                  style={{
+                    paddingLeft: 20,
+                    paddingTop: 5,
+                    paddingBottom: 11,
+                    color: 'black',
+                  }}>
+                  Opening Hours{' '}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[{ paddingLeft: 10, paddingRight: 10, paddingTop: 2 }]}
+              activeOpacity={0.5}
               onPress={() => this.props.navigation.navigate('AboutUsScreeen')}>
               <View
                 style={{
